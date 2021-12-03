@@ -15,14 +15,15 @@ logging.basicConfig(
     filemode='w',
     format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
 )
-# После ревью заполню докстринги к функция
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
 formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 handler.setFormatter(formatter)
 
@@ -44,7 +45,7 @@ HOMEWORK_STATUSES = {
 
 
 def send_message(bot, message):
-    """Функция отправляет сообщения в Телеграмбот"""
+    """Функция отправляет сообщения в Телеграмбот."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
 
@@ -58,7 +59,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
-    """Функция отправляет запрос к апи и возвращает словарь"""
+    """Функция отправляет запрос к апи и возвращает словарь."""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     response = requests.get(
@@ -78,7 +79,7 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """Функция проверяет начилие изменений в работе"""
+    """Функция проверяет начилие изменений в работе."""
     if type(response) == dict:
         homework = response['homeworks']
         if len(homework) > 0:
@@ -92,8 +93,8 @@ def check_response(response):
 
 def parse_status(homework):
     """Функция проверяет статус работы и возвращает сообщение
-    о результате проверки"""
-
+    о результате проверки.
+    """
     if 'homework_name' not in homework:
         raise exceptions.ParseError(
             'Отсутствуют ключь "homework_name" в ответе API')
@@ -108,7 +109,7 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """Проверяет наличие переменных окружения"""
+    """Проверяет наличие переменных окружения."""
     if not PRACTICUM_TOKEN:
         logging.critical(f'Отсутствует обязательная переменная окружения:PRACTICUM_TOKEN')
         return False
