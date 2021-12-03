@@ -40,7 +40,7 @@ HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 HOMEWORK_STATUSES = {
     'approved': 'Работа проверена: ревьюеру всё понравилось. Ура!',
     'reviewing': 'Работа взята на проверку ревьюером.',
-    'rejected': 'Работа проверена: у ревьюера есть замечания.'
+    'rejected': 'Работа проверена: у ревьюера есть замечания.',
 }
 
 
@@ -92,7 +92,8 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Функция проверяет статус работы и возвращает сообщение
+    """
+    Функция проверяет статус работы и возвращает сообщение
     о результате проверки.
     """
     if 'homework_name' not in homework:
@@ -131,7 +132,7 @@ def main():
         return None
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())-60*60*6060
+    current_timestamp = int(time.time())
     all_errors = []
     while True:
         try:
