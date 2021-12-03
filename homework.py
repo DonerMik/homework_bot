@@ -92,8 +92,8 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Функция проверяет статус работы и возвращает сообщение
-    о результате проверки.
+    """Функция проверяет статус работы.
+    Возвращает сообщение о результате проверки.
     """
     if 'homework_name' not in homework:
         raise exceptions.ParseError(
