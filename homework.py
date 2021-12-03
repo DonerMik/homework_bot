@@ -92,8 +92,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """
-    Функция проверяет статус работы и возвращает сообщение
+    """Функция проверяет статус работы и возвращает сообщение
     о результате проверки.
     """
     if 'homework_name' not in homework:
@@ -112,13 +111,16 @@ def parse_status(homework):
 def check_tokens():
     """Проверяет наличие переменных окружения."""
     if not PRACTICUM_TOKEN:
-        logging.critical(f'Отсутствует обязательная переменная окружения:PRACTICUM_TOKEN')
+        logging.critical(
+            'Отсутствует обязательная переменная окружения:PRACTICUM_TOKEN')
         return False
     if not TELEGRAM_TOKEN:
-        logging.critical(f'Отсутствует обязательная переменная окружения:TELEGRAM_TOKEN')
+        logging.critical(
+            'Отсутствует обязательная переменная окружения:TELEGRAM_TOKEN')
         return False
     if not TELEGRAM_CHAT_ID:
-        logging.critical(f'Отсутствует обязательная переменная окружения:TELEGRAM_CHAT_ID')
+        logging.critical(
+            'Отсутствует обязательная переменная окружения:TELEGRAM_CHAT_ID')
         return False
     return True
 
@@ -128,7 +130,8 @@ def main():
     try:
         check_tokens()
     except Exception as error:
-        logging.critical(f'Отсутствует обязательная переменная окружения:{error}')
+        logging.critical(
+            f'Отсутствует обязательная переменная окружения:{error}')
         return None
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
