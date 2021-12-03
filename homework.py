@@ -7,7 +7,7 @@ import requests
 import telegram
 from dotenv import load_dotenv
 
-from exceptions import *
+import exceptions
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -44,10 +44,11 @@ HOMEWORK_STATUSES = {
 
 
 def send_message(bot, message):
+    """Функция отправляет сообщения в Телеграмбот"""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
 
-    except SendMessageError as error:
+    except exceptions.SendMessageError as error:
         logging.error(
             f'Произошла ошибка при отправке сообщения: {error}')
     except Exception as error:
@@ -57,6 +58,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
+    """Функция отправляет запрос к апи и возвращает словарь"""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     response = requests.get(
@@ -68,32 +70,37 @@ def get_api_answer(current_timestamp):
     if status_code == 200:
         return response.json()
     else:
-        logging.error((f'Сбой в работе программы: Эндпоинт {ENDPOINT} недоступен',
-                       f'Код ответа api: {status_code}'))
-        raise GetApiError(f'Сбой в работе программы: Эндпоинт {ENDPOINT} недоступен',
-                          f'Код ответа api: {status_code}')
+        message = (
+            f'Сбой в работе программы: Эндпоинт {ENDPOINT} недоступен',
+            f'Код ответа api: {status_code}')
+        logging.error(message)
+        raise exceptions.GetApiError(message)
 
 
 def check_response(response):
+    """Функция проверяет начилие изменений в работе"""
     if type(response) == dict:
         homework = response['homeworks']
         if len(homework) > 0:
             return homework[0]
         message = 'В ответе нет новых статусов'
         logging.debug(message)
-        raise CheckResponseError(message)
+        raise exceptions.CheckResponseError(message)
     else:
         raise TypeError('неверный тип параметра')
 
 
 def parse_status(homework):
+    """Функция проверяет статус работы и возвращает сообщение
+    о результате проверки"""
 
     if 'homework_name' not in homework:
-        raise ParseError('Отсутствуют ключь "homework_name" в ответе API')
+        raise exceptions.ParseError(
+            'Отсутствуют ключь "homework_name" в ответе API')
     homework_name = homework['homework_name']
     message = 'Отсутствуют ключь "status"   в ответе API'
     if 'status' not in homework:
-        raise ParseError(message)
+        raise exceptions.ParseError(message)
     homework_status = homework['status']
     verdict = HOMEWORK_STATUSES[homework_status]
     logging.error(message)
@@ -101,6 +108,7 @@ def parse_status(homework):
 
 
 def check_tokens():
+    """Проверяет наличие переменных окружения"""
     if not PRACTICUM_TOKEN:
         logging.critical(f'Отсутствует обязательная переменная окружения:PRACTICUM_TOKEN')
         return False
