@@ -40,3 +40,15 @@ class TelegramTokenError(Exception):
 
 class ChatIdError(Exception):
     pass
+
+
+class ResponseError(Exception):
+    pass
+
+
+class CheckHomework(Exception):
+    pass
+
+
+class VerdictError(Exception):
+    pass
