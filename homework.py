@@ -99,7 +99,6 @@ def check_response(response):
     raise exceptions.CheckResponseError(message)
 
 
-
 def parse_status(homework):
     """Функция проверяет статус работы.
     Возвращает сообщение о результате проверки.
