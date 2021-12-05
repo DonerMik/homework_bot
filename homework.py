@@ -7,7 +7,6 @@ import time
 import requests
 import telegram
 from dotenv import load_dotenv
-
 import exceptions
 
 logging.basicConfig(
@@ -74,7 +73,6 @@ def get_api_answer(current_timestamp):
         logger.error(message)
         raise Exception(message)
     status_code = response.status_code
-    print(status_code)
     if status_code == http.HTTPStatus.OK:
         return response.json()
     message = (
@@ -86,19 +84,20 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Функция проверяет начилие изменений в работе."""
-    if isinstance(response, dict):
-        try:
-            homework = response['homeworks']
-        except exceptions.CheckHomework as error:
-            message = f'Ключ "homeworks" отсутствует в словаре {error}'
-            logger.error(message)
-            raise exceptions.CheckHomework(message)
-        if len(homework) > 0:
-            return homework[0]
-        message = 'В ответе нет новых статусов'
-        logger.debug(message)
-        raise exceptions.CheckResponseError(message)
-    raise TypeError('неверный тип параметра')
+    if not isinstance(response, dict):
+        raise TypeError('Неверный тип параметра')
+    try:
+        homework = response['homeworks']
+    except exceptions.CheckHomework as error:
+        message = f'Ключ "homeworks" отсутствует в словаре {error}'
+        logger.error(message)
+        raise exceptions.CheckHomework(message)
+    if len(homework) > 0:
+        return homework[0]
+    message = 'В ответе нет новых статусов'
+    logger.debug(message)
+    raise exceptions.CheckResponseError(message)
+
 
 
 def parse_status(homework):
